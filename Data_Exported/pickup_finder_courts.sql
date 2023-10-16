@@ -25,8 +25,8 @@ DROP TABLE IF EXISTS `courts`;
 CREATE TABLE `courts` (
   `idcourts` int NOT NULL,
   `address` varchar(45) DEFAULT NULL,
-  `num_of_hoops` varchar(45) DEFAULT NULL,
-  `condition` varchar(45) DEFAULT NULL,
+  `num_of_hoops` int DEFAULT NULL,
+  `condition` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`idcourts`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -37,6 +37,7 @@ CREATE TABLE `courts` (
 
 LOCK TABLES `courts` WRITE;
 /*!40000 ALTER TABLE `courts` DISABLE KEYS */;
+INSERT INTO `courts` VALUES (1,'95111, 1111 1st Street, San Jose, CA',2,4.50),(2,'95222, 2222 1st Street, San Jose, CA',3,3.50),(3,'95333, 3333 1st Street, San Jose, CA',4,5.00),(4,'95444, 4444 1st Street, San Jose, CA',5,4.10);
 /*!40000 ALTER TABLE `courts` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-19 15:08:30
+-- Dump completed on 2023-10-15 20:52:49
