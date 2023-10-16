@@ -28,7 +28,7 @@
      String db = "pickup_finder";
         String user; // assumes database name is the same as username
           user = "root";
-        String password = "thomasoh5";
+        String password = "???"; // put your password in
         try {
             
             java.sql.Connection con; 
