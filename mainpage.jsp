@@ -7,5 +7,6 @@
         <p><a href="browse_court.jsp">Browse Court</a></p>
         <p><a href="create_event.jsp">Create Event</a></p>
         <p><a href="login.jsp">Login</a></p>
+        <p><a href="create_group.jsp">Create Group</a></p>
     </body>
 </html>
