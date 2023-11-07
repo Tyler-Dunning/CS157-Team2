@@ -24,7 +24,7 @@
 <%
     String db = "pickup_finder";
     String user = "root";
-    String password = "Pickle456"; // put your password in
+    String password = "???"; // put your password in
 
     String username = request.getParameter("username");
     String userpass = request.getParameter("password");
