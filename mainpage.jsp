@@ -27,18 +27,19 @@
             //out.println(db + " database successfully opened.<br/><br/>");
 
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT user2 FROM friends WHERE user1 = '" + currentuser + "'");
+            ResultSet rs = stmt.executeQuery("SELECT user2, friendship_id FROM friends WHERE user1 = '" + currentuser + "'");
             while(rs.next()){
-
+                int friendID = rs.getInt(2);
                 out.println("<p>");
-                out.println(rs.getString(1) + "<a href='login.jsp'>Message</a>");
+                out.println(rs.getString(1) + "<a href='friend_chat.jsp?friendID=" + friendID + "&currentuser=" + currentuser + "'>Message</a>");
                 out.println("<p>");
             }
 
-            rs = stmt.executeQuery("SELECT user1 FROM friends WHERE user2 = '" + currentuser + "'");
+            rs = stmt.executeQuery("SELECT user1, friendship_id FROM friends WHERE user2 = '" + currentuser + "'");
             while(rs.next()){
+                int friendID = rs.getInt(2);
                 out.println("<p>");
-                out.println(rs.getString(1) + "<a href='login.jsp'>Message</a>");
+                out.println(rs.getString(1) + "<a href='friend_chat.jsp?friendID=" + friendID + "&currentuser=" + currentuser + "'>Message</a>");
                 out.println("<p>");
             }
             rs.close();
