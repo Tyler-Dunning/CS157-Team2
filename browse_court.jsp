@@ -1,7 +1,7 @@
 <%@ page import="java.sql.*"%>
 <html>
   <head>
-    <title>Three Tier Architecture Demo</title>
+    <title>Browse Courts</title>
   </head>
   <body>
     <h1>Browse Court</h1>
@@ -29,22 +29,33 @@
         String user; // assumes database name is the same as username
           user = "root";
         String password = "???"; // put your password in
+        String currentuser = request.getParameter("currentuser");
         try {
             
             java.sql.Connection con; 
             Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pickup_finder?autoReconnect=true&useSSL=false",user, password);
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pickupfinder?autoReconnect=true&useSSL=false",user, password);
             //out.println(db + " database successfully opened.<br/><br/>");
             
             out.println("Initial entries in table \"courts\": <br/>");
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM courts");
             while (rs.next()) {
-                out.println(rs.getInt(1) + " | " + rs.getString(2) + " | " + rs.getInt(3) + " | " + rs.getFloat(4) + "<br/><br/>");
+                out.println(rs.getInt(1) + " | " + rs.getString(2) + " | " + rs.getString(3) + " | " + rs.getString(4) + " | " + rs.getInt(5) + " | " + rs.getString(6) +  "<br/>");
+                Statement tempStatement = con.createStatement();
+                ResultSet tempRs = tempStatement.executeQuery("SELECT COUNT(*) FROM useroncourt WHERE court_id = " + rs.getInt(1));
+                int c = 0;
+                if(tempRs.next())
+                {
+                  c = tempRs.getInt(1);
+                }
+                out.println("Current players: " + c + " <a href='court_view.jsp?courtID=" + rs.getInt(1) + "&currentuser=" + currentuser + "' >View Court</a><br><br>");
+                
             }
             rs.close();
             stmt.close();
             con.close();
+
         } catch(SQLException e) { 
             out.println("SQLException caught: " + e.getMessage()); 
         }

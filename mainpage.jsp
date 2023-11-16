@@ -5,8 +5,9 @@
     </head>
     <body>
         <h1>Pickup Finder</h1>
-        <p><a href="browse_court.jsp">Browse Court</a></p>
+        <p><a href="browse_court.jsp?currentuser=<%= request.getParameter("currentuser") %>">Browse Court</a></p>
         <p><a href="create_event.jsp">Create Event</a></p>
+        <p><a href="join_group.jsp?currentuser=<%= request.getParameter("currentuser") %>">Join Group</a></p>
         <p><a href="login.jsp">Login</a></p>
 
 

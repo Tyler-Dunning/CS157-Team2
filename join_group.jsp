@@ -8,18 +8,15 @@
             <label for="type">Enter Group ID:</label><br>
             <input type="text" id="group" name="groupid" required><br><br>    
 
-            <label for="type">Enter User ID:</label><br>
-            <input type="text" id="user" name="userid" required><br><br>    
-
             <input type="submit" value="Join"><br><br>
         </form>
         <% 
-            String db = "pickup_finder";
+            String db = "pickupfinder";
             String user; 
             user = "root";
-            String password = "???"; 
+        String password = "???"; // put your password in
             String gid = request.getParameter("groupid");
-            String uid = request.getParameter("userid");
+            String uid = request.getParameter("currentuser");
             
             try {
                 java.sql.Connection con; 
