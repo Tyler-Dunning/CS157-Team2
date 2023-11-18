@@ -1,0 +1,21 @@
+/* Your CSS file (e.g., Messages.css) */
+
+.textbox {
+    width: 60%; /* Adjust width as needed */
+    margin: 0 auto; /* Center the text box horizontally */
+    padding: 20px; /* Add padding around the text box */
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 5px; /* Add border radius */
+    background-color: darkslategray; /* Set background color */
+    text-align: center;
+  }
+  
+  ul {
+    list-style: none; /* Remove bullet points */
+    padding: 0; /* Remove default padding */
+  }
+  
+  ul li {
+    margin-bottom: 10px; /* Add margin between list items */
+  }
+  

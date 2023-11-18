@@ -1,0 +1,58 @@
+/* Home.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Monaco', monospace; /* Change to the desired font */
+    background-color: #028C6A; /* Change the background color */
+    text-align: center;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+  }
+  
+  .header {
+    font-size: 48px; /* Change the font size */
+    margin-bottom: 20px;
+    text-align: center;
+    color: white;
+  }
+  
+  .friendsList {
+    width: 40%; /* Set the width for the friends list */
+    text-align: right;
+  }
+  
+  .friends{
+    text-align: right;
+  }
+    
+.mainButtons{
+    align-items: center;
+    font-size: 24px;
+    background-color: #FE7773; /* Set background color */
+    color: #fff; /* Set text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Add border-radius */
+    cursor: pointer; /* Add pointer cursor on hover */
+    margin-bottom: 32px; /* Add margin bottom to separate list items */
+    padding: 24px;
+    padding-left: 48px;
+    padding-right: 48px;
+}
+
+.friendButtons {
+    margin-left: 10px; /* Add margin to separate button from list item */
+    padding: 8px 16px; /* Add padding to the button */
+    background-color: #FE7773; /* Set background color */
+    color: #fff; /* Set text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Add border-radius */
+    cursor: pointer; /* Add pointer cursor on hover */
+    list-style: none;
+  }
+
+  
