@@ -20,6 +20,16 @@ function Home() {
       navigate("/friendMessages", { state: { username: username, friendID: friendIDs[e] } });
     }
 
+    const openCourts = () => {
+      
+      navigate("/courts", { state: { username: username} });
+    }
+
+    const openGroups = () => {
+      
+      navigate("/groups", { state: { username: username} });
+    }
+
     const getFriends = async () =>
     {
       console.log("opened");
@@ -58,11 +68,11 @@ function Home() {
     
     <div> 
         <h2 className = "header">Welcome {username}</h2><br></br>
-        <body>
-          <button className = "mainButtons">Join a Court</button><br></br>
-          <button className = "mainButtons">Groups</button><br></br>
-          <button className = "mainButtons">Events</button><br></br>
-        </body>
+        
+        <button className = "mainButtons" onClick={openCourts}>Join a Court</button><br></br>
+        <button className = "mainButtons" onClick = {openGroups}>Groups</button><br></br>
+        <button className = "mainButtons">Events</button><br></br>
+        
 
       <ul className = "friends">
         {friends.map((item, index) => (

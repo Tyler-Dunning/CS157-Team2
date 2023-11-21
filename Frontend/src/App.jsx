@@ -17,6 +17,15 @@ import Home from "./components/Home";
 import FriendMessages from "./components/FriendMessages";
 
 import CreateAccount from "./components/CreateAccount";
+
+import Courts from "./components/Courts";
+
+import CourtView from "./components/CourtView";
+
+import Groups from "./components/Groups";
+
+import CreateGroup from "./components/CreateGroup";
+
 function App() {
 	return (
 		<>
@@ -48,6 +57,22 @@ function App() {
 					<Route
 						path="/friendMessages"
 						element={<FriendMessages />}
+					/>
+					<Route
+						path="/courts"
+						element={<Courts />}
+					/>
+					<Route
+						path="/courtView"
+						element={<CourtView />}
+					/>
+					<Route
+						path="/groups"
+						element={<Groups />}
+					/>
+					<Route
+						path="/createGroup"
+						element={<CreateGroup />}
 					/>
 					{/* If any route mismatches the upper 
 		route endpoints then, redirect triggers 

@@ -33,6 +33,31 @@ app.get("/courts", (req, res) => {
     })
 });
 
+app.get("/groups", (req, res) => {
+    const sql = "SELECT * FROM playergroups";
+    db.query(sql, (err, data) => {
+        if(err) console.log(err);
+        return res.json(data);
+    })
+})
+
+app.get("/usersOnCourt/:court", (req, res) => {
+    const court = req.params.court;
+    db.query("SELECT user_id FROM useroncourt WHERE court_id = ?", court, (err,data) => {
+        if(err) console.log(err);
+        res.send(data);
+    });
+});
+
+app.get("/numUsersOnCourt/:court", (req, res) => {
+    const court = req.params.court;
+    db.query("SELECT COUNT(*) AS num FROM useroncourt WHERE court_id = ?", court, (err,data) => {
+        if(err) console.log(err);
+        res.send(data);
+    });
+});
+
+
 app.get('/friends/:id', (req,res) => {
     const id = req.params.id;
     db.query("SELECT user2, friendship_id FROM friends WHERE user1 = ?", id, (err,data) => {
@@ -67,6 +92,16 @@ app.get('/getmessage/friend/:friendID', (req,res) => {
     })
 });
 
+app.get('/getmessage/court/:courtID', (req,res) => {
+    const friendID = req.params.courtID;
+    console.log(friendID);
+    db.query("SELECT sender_id, content, time_sent FROM messages NATURAL JOIN messageincourt WHERE court_id = ?", friendID, (err, data) =>
+    {
+        if(err) console.log(err);
+        res.send(data);
+    })
+});
+
 app.post('/users/post/', (req, res) => {
     console.log(req.body);
     const id = req.body.id;
@@ -76,6 +111,34 @@ app.post('/users/post/', (req, res) => {
         res.send(data);
     });
 });
+
+app.post('/addfriend', (req, res) => {
+    const user = req.body.user;
+    const friend = req.body.friend;
+    db.query("INSERT INTO friends(user1, user2) VALUES(?, ?)", [user, friend] , (err,data) =>  {
+        if(err) console.log(err);
+        res.send(data);
+        console.log(data);
+    });
+})
+
+app.post('/joinCourt/', (req, res) => {
+    const user = req.body.user;
+    const court = req.body.court;
+    db.query("INSERT INTO useroncourt(user_id, court_id) VALUES(?, ?)", [user, court], (err,data) => {
+        if(err) console.log(err);
+        res.send(data);
+    })
+});
+
+app.post('/createGroup', (req, res) => {
+    const id = req.body.id;
+    const desc = req.body.desc;
+    db.query("INSERT INTO playergroups(group_id, group_desc) VALUES (?, ?)", [id, desc], (err,data) =>{
+        if(err) console.log(err);
+        res.send(data);
+    })
+})
 
 app.post('/sendmessage/friend', (req, res) =>{
     console.log(req.body);
@@ -94,7 +157,34 @@ app.post('/sendmessage/friend', (req, res) =>{
             });
         });
     });
+});
 
+app.post('/sendmessage/court', (req, res) =>{
+    console.log(req.body);
+    const id = req.body.id;
+    const content = req.body.content;
+    const chat = req.body.courtID;
+    db.query("INSERT INTO messages(sender_id, content) VALUES(?, ?)", [id, content] , (err,data) =>  {
+        if(err) console.log(err);
+        res.send(data);
+        db.query("SELECT MAX(message_id) AS 'HIGH' FROM messages", (err, data) => {
+            const mesID = data[0].HIGH;
+            console.log(data[0].HIGH);
+    
+            db.query("INSERT INTO messageincourt(message_id, court_id) VALUES(?, ?)", [mesID, chat] , (err,data) =>  {
+                if(err) console.log(err);
+            });
+        });
+    });
+});
+
+app.delete('/removeUserFromCourt/:user', (req, res) => 
+{
+    const user = req.params.user;
+    db.query("DELETE FROM useroncourt WHERE user_id = ?", user, (err, data) => {
+        if (err) console.log(err);
+        res.send(data);
+    })
 });
 
 app.listen(8081, () => {
