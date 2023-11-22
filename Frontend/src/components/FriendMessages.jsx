@@ -8,6 +8,7 @@ function FriendMessages() {
 
     const {state} = useLocation();
     const {username, friendID} = state;
+    const navigate = useNavigate();
 
     const [messages, setMessages] = useState([[]]);
 
@@ -63,6 +64,8 @@ function FriendMessages() {
       <button onClick = {sendMessage}>
             Send
         </button>
+        <br></br>
+        <button onClick = {() => navigate('/home', {state: {username: username}})}>Return Home</button>
     </div>
   )
 }

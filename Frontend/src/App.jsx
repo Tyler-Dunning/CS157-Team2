@@ -26,6 +26,8 @@ import Groups from "./components/Groups";
 
 import CreateGroup from "./components/CreateGroup";
 
+import ViewGroup from "./components/ViewGroup";
+
 function App() {
 	return (
 		<>
@@ -73,6 +75,10 @@ function App() {
 					<Route
 						path="/createGroup"
 						element={<CreateGroup />}
+					/>
+					<Route
+						path="/viewGroup"
+						element={<ViewGroup />}
 					/>
 					{/* If any route mismatches the upper 
 		route endpoints then, redirect triggers 

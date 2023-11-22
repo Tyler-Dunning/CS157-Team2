@@ -6,6 +6,7 @@ function CourtView() {
 
     const {state} = useLocation();
     const {username, courtID, courtName} = state;
+    const navigate = useNavigate();
 
     const[usersOnCourt, setUsers] = useState([]);
     const[numUsers, setNumUsers] = useState(0);
@@ -13,6 +14,10 @@ function CourtView() {
     const[messageContent, setMessage] = useState("");
     const[messages, setMessages] = useState([]);
     const[friends, setFriends] = useState([]);
+
+    const returnToCourts = () => {
+        navigate('/courts', {state: {username: username}});
+    }
 
     const getUsersOnCourt = async () => {
         try{ 
@@ -33,28 +38,12 @@ function CourtView() {
                 setCurUser(true);
             }
             setUsers(res);
+            setNumUsers(res.length);
           }
           catch(error) {
             console.error('Error fetching courts:', error);
           }
     };
-
-
-
-    const getNumUsers = async () => {
-        try{ 
-            var res = 0;
-            const response = await axios.get(`http://localhost:8081/numUsersOnCourt/${courtID}`);
-            const userData = response.data;
-            if(userData.length > 0) {
-                res = userData[0].num;
-              }
-            setNumUsers(res);
-          }
-          catch(error) {
-            console.error('Error fetching courts:', error);
-          }
-    }
 
     const getFriends = async() => {
         try{ 
@@ -123,7 +112,7 @@ function CourtView() {
 
 
 
-    useEffect(() => {getUsersOnCourt(); getNumUsers(), getMessages(), getFriends()}, []);
+    useEffect(() => {getUsersOnCourt(); getMessages(), getFriends()}, []);
 
   return (
     <div>
@@ -131,7 +120,7 @@ function CourtView() {
         {curUserOnCourt && <button onClick = {leaveCourt}>Leave This Court</button>}
         {!curUserOnCourt && <button onClick = {joinCourt}>Join This Court</button>}
         <h3>{numUsers} Current Players</h3>
-        <ul className='courtList'>
+        <ul className='friendList'>
         {usersOnCourt.map((item, index) => (
           <li key={index}>
             {item} {(item != username && friends.indexOf(item) == -1) && <button onClick = {() => {addFriend(item)}}>Add Friend</button>}<br></br>
@@ -148,6 +137,7 @@ function CourtView() {
             </li>
         ))}        
       </ul>
+
       <input
         type="text"
         placeholder="Enter message"
@@ -157,6 +147,8 @@ function CourtView() {
       <button onClick = {sendMessage}>
             Send
         </button>
+        <br></br>
+        <button onClick = {returnToCourts}>Return to Courts</button>
     </div>
   )
 }

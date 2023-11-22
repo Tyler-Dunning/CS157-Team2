@@ -14,6 +14,10 @@ function Groups() {
         navigate('/createGroup', {state: {username: username}});
     }
 
+    const returnToHome = () => {
+        navigate('/home', {state: {username: username}});
+    }
+
     const getGroups = async () => {
         try{
             var res = [];
@@ -30,6 +34,10 @@ function Groups() {
       }
     }
 
+    const goToGroup = (e, f) => {
+        navigate('/viewGroup', {state: {username: username, groupID: e, groupDesc: f}});
+    }
+
     useEffect(() => {getGroups()}, []);
 
   return (
@@ -40,8 +48,11 @@ function Groups() {
         {groups.map((item, index) => (
           <li key={index}>
             {item[0]} : {item[1]}
+            <button onClick = {() => {goToGroup(item[0], item[1])}}>View This Group</button>
             </li>
         ))}        
+        <br></br>
+        <button onClick = {returnToHome}>Return Home</button>
       </ul>
     </div>
   )

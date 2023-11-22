@@ -10,6 +10,10 @@ function Courts() {
 
     const[courts, setCourts] = useState([]);
 
+    const returnToHome = () => {
+        navigate('/home', {state: {username: username}});
+    }
+
     const getCourts = async () => {
         try{ 
             var res = [];
@@ -43,7 +47,8 @@ function Courts() {
             </li>
         ))}        
       </ul>
-
+      <br></br>
+      <button onClick = {returnToHome}>Return Home</button>
     </div>
   )
 }

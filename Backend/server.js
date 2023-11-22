@@ -49,9 +49,9 @@ app.get("/usersOnCourt/:court", (req, res) => {
     });
 });
 
-app.get("/numUsersOnCourt/:court", (req, res) => {
-    const court = req.params.court;
-    db.query("SELECT COUNT(*) AS num FROM useroncourt WHERE court_id = ?", court, (err,data) => {
+app.get("/usersInGroup/:group", (req, res) => {
+    const group = req.params.group;
+    db.query("SELECT user_id FROM useringroup WHERE group_id = ?", group, (err,data) => {
         if(err) console.log(err);
         res.send(data);
     });
@@ -102,6 +102,15 @@ app.get('/getmessage/court/:courtID', (req,res) => {
     })
 });
 
+app.get('/getmessage/group/:groupID', (req,res) => {
+    const groupID = req.params.groupID;
+    db.query("SELECT sender_id, content, time_sent FROM messages NATURAL JOIN messageingroup WHERE group_id = ?", groupID, (err, data) =>
+    {
+        if(err) console.log(err);
+        res.send(data);
+    })
+});
+
 app.post('/users/post/', (req, res) => {
     console.log(req.body);
     const id = req.body.id;
@@ -126,6 +135,15 @@ app.post('/joinCourt/', (req, res) => {
     const user = req.body.user;
     const court = req.body.court;
     db.query("INSERT INTO useroncourt(user_id, court_id) VALUES(?, ?)", [user, court], (err,data) => {
+        if(err) console.log(err);
+        res.send(data);
+    })
+});
+
+app.post('/joinGroup/', (req, res) => {
+    const user = req.body.user;
+    const group = req.body.group;
+    db.query("INSERT INTO useringroup(user_id, group_id) VALUES(?, ?)", [user, group], (err,data) => {
         if(err) console.log(err);
         res.send(data);
     })
@@ -178,10 +196,39 @@ app.post('/sendmessage/court', (req, res) =>{
     });
 });
 
+app.post('/sendmessage/group', (req, res) =>{
+    console.log(req.body);
+    const id = req.body.id;
+    const content = req.body.content;
+    const chat = req.body.groupID;
+    db.query("INSERT INTO messages(sender_id, content) VALUES(?, ?)", [id, content] , (err,data) =>  {
+        if(err) console.log(err);
+        res.send(data);
+        db.query("SELECT MAX(message_id) AS 'HIGH' FROM messages", (err, data) => {
+            const mesID = data[0].HIGH;
+            console.log(data[0].HIGH);
+    
+            db.query("INSERT INTO messageingroup(message_id, group_id) VALUES(?, ?)", [mesID, chat] , (err,data) =>  {
+                if(err) console.log(err);
+            });
+        });
+    });
+});
+
 app.delete('/removeUserFromCourt/:user', (req, res) => 
 {
     const user = req.params.user;
     db.query("DELETE FROM useroncourt WHERE user_id = ?", user, (err, data) => {
+        if (err) console.log(err);
+        res.send(data);
+    })
+});
+
+app.delete('/removeUserFromGroup/:user/:groupID', (req, res) => 
+{
+    const user = req.params.user;
+    const group = req.params.groupID;
+    db.query("DELETE FROM useringroup WHERE user_id = ? AND group_id = ?", [user, group], (err, data) => {
         if (err) console.log(err);
         res.send(data);
     })
