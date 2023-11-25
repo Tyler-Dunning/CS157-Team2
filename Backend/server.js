@@ -13,7 +13,7 @@ const db = mysql.createPool({
     host: "localhost",
     user: "root",
     password: "",
-    database: "pickupfinder",
+    database: "pickup_finder",
     port: 3306,
     options: {
         trustedConnection: true
@@ -41,6 +41,14 @@ app.get("/groups", (req, res) => {
     })
 })
 
+app.get("/events", (req, res) => {
+    const sql = "SELECT * FROM playerevents";
+    db.query(sql, (err, data) => {
+        if(err) console.log(err);
+        return res.json(data);
+    })
+})
+
 app.get("/usersOnCourt/:court", (req, res) => {
     const court = req.params.court;
     db.query("SELECT user_id FROM useroncourt WHERE court_id = ?", court, (err,data) => {
@@ -56,6 +64,27 @@ app.get("/usersInGroup/:group", (req, res) => {
         res.send(data);
     });
 });
+
+app.get("/teamsInEvent/:eventID" , (req, res) => {
+    const eventID = req.params.eventID;
+    db.query("SELECT t.event_id,t.team_id,t.captain_name,u.user_id FROM pickup_finder.teams t JOIN pickup_finder.userOnTeam u ON t.team_id = u.team_id WHERE t.event_id = ? ORDER BY t.team_id, u.user_id;", eventID, (err, data) => {
+        if(err) console.log(err);
+        const teams = {};
+
+        data.forEach(item => {
+            if (!teams[item.team_id]) {
+                teams[item.team_id] = {
+                    event_id: item.event_id,
+                    team_id: item.team_id,
+                    team_captain: item.captain_name,
+                    members: []
+                };
+            }
+            teams[item.team_id].members.push(item.user_id);
+        });
+        res.send(teams);
+    });
+})
 
 
 app.get('/friends/:id', (req,res) => {
@@ -111,6 +140,14 @@ app.get('/getmessage/group/:groupID', (req,res) => {
     })
 });
 
+app.get('/teamMembers/:teamID', (req, res) => {
+    const teamID = req.body.teamID;
+    db.query("SELECT user_id FROM userOnTeam WHERE team_id", teamID, (err, data) => {
+        if(err) console.log(err);
+        res.send(data);
+    })
+})
+
 app.post('/users/post/', (req, res) => {
     console.log(req.body);
     const id = req.body.id;
@@ -153,6 +190,54 @@ app.post('/createGroup', (req, res) => {
     const id = req.body.id;
     const desc = req.body.desc;
     db.query("INSERT INTO playergroups(group_id, group_desc) VALUES (?, ?)", [id, desc], (err,data) =>{
+        if(err) console.log(err);
+        res.send(data);
+    })
+})
+
+app.post('/createTeam', (req, res) => {
+    const user = req.body.user;
+    const event = req.body.eventID;
+
+    // Insert into the 'teams' table
+    db.query("INSERT INTO teams(event_id, captain_name) VALUES (?, ?)", [event, user], (err, data) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).send(err);
+        }
+
+        // Get the last inserted id
+        db.query("SELECT team_id FROM teams WHERE event_id = ? AND captain_name = ?", [event, user], (err, data) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).send(err);
+            }
+
+            const team_id = data[0].team_id;
+            res.send({ team_id: team_id }); // Sending back the team_id as a response
+        });
+    });
+});
+
+app.post('/joinTeam', (req, res) => {
+    const team = req.body.team;
+    const user = req.body.user;
+    db.query("INSERT INTO userOnTeam(user_id, team_id) VALUES (?, ?)", [user, team], (err,data) => {
+        if(err) console.log(err);
+        res.send(data);
+    })
+})
+
+app.post('/createEvent', (req, res) => {
+    const name = req.body.name;
+    const court = req.body.court;
+    const date = new Date();
+    const maxTeams = req.body.maxTeams;
+    const teamSize = req.body.teamSize;
+    const desc = req.body.desc;
+
+    db.query( "INSERT INTO playerEvents(event_name, court_id, event_date, max_teams, team_size, event_desc) VALUES (?, ?, ?, ?, ?, ?)", 
+    [name, court, date, maxTeams, teamSize, desc], (err, data) => {
         if(err) console.log(err);
         res.send(data);
     })
