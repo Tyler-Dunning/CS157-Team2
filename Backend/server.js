@@ -41,6 +41,14 @@ app.get("/groups", (req, res) => {
     })
 })
 
+app.get("/groupActivity/:groupID", (req, res) => {
+    const groupID = req.params.groupID;    
+    db.query("SELECT activity_name, activity_desc, location FROM groupactivities WHERE group_id = ?", groupID, (err, data) => {
+        if(err) console.log(err);
+        return res.json(data);
+    })
+})
+
 app.get("/usersOnCourt/:court", (req, res) => {
     const court = req.params.court;
     db.query("SELECT user_id FROM useroncourt WHERE court_id = ?", court, (err,data) => {
@@ -153,6 +161,17 @@ app.post('/createGroup', (req, res) => {
     const id = req.body.id;
     const desc = req.body.desc;
     db.query("INSERT INTO playergroups(group_id, group_desc) VALUES (?, ?)", [id, desc], (err,data) =>{
+        if(err) console.log(err);
+        res.send(data);
+    })
+})
+
+app.post('/createActivity', (req, res) => {
+    const name = req.body.name;
+    const desc = req.body.desc;
+    const location = req.body.location;
+    const groupID = req.body.groupID;
+    db.query("INSERT INTO groupActivities(activity_name, activity_desc, location, group_id) VALUES (?, ?, ?, ?)", [name, desc,location, groupID], (err,data) =>{
         if(err) console.log(err);
         res.send(data);
     })
