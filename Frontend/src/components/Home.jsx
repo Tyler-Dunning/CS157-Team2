@@ -30,6 +30,10 @@ function Home() {
       navigate("/groups", { state: { username: username} });
     }
 
+    const openEvents = () => {
+      navigate("/events",  { state: { username: username} });
+    }
+
     const getFriends = async () =>
     {
       console.log("opened");
@@ -71,7 +75,7 @@ function Home() {
         
         <button className = "mainButtons" onClick={openCourts}>Join a Court</button><br></br>
         <button className = "mainButtons" onClick = {openGroups}>Groups</button><br></br>
-        <button className = "mainButtons">Events</button><br></br>
+        <button className = "mainButtons" onClick={openEvents}>Events</button><br></br>
         
 
       <ul className = "friends">
