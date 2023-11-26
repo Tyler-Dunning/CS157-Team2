@@ -16,7 +16,10 @@ function ViewGroup() {
     const[friends, setFriends] = useState([]);
 
     const returnToGroups = () => {
-        navigate('/groups', {state: {username: username}});
+      navigate('/groups', {state: {username: username}});
+    }
+    const goToGroupActivity = () => {
+      navigate('/groupActivity', {state: {username: username, groupID: groupID}});
     }
 
     const getUsersInGroup = async () => {
@@ -28,7 +31,7 @@ function ViewGroup() {
             for(let i = 0; i < userData.length; i++) {
                 res[i] = userData[i].user_id;
                 console.log(userData[i].user_id);
-              }
+            }
             if(res.indexOf(username) == -1)
             {
                 setCurUser(false);
@@ -102,7 +105,6 @@ function ViewGroup() {
         await axios.post('http://localhost:8081/joinGroup', {"user": username, "group": groupID});
         await getUsersInGroup();
         console.log("joined");
-        
     }
 
     const leaveGroup = async () => {
@@ -153,6 +155,7 @@ function ViewGroup() {
         </button>
         }
         <br></br>
+        <button onClick = {goToGroupActivity}>Browse Group Activities</button>
         <button onClick = {returnToGroups}>Return to Groups</button>
     </div>
   )

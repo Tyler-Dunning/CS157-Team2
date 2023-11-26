@@ -28,6 +28,16 @@ import CreateGroup from "./components/CreateGroup";
 
 import ViewGroup from "./components/ViewGroup";
 
+import GroupActivity from "./components/GroupActivity";
+
+import CreateActivity from "./components/CreateActivity";
+
+import Events from "./components/Events";
+
+import CreateEvent from "./components/CreateEvent";
+
+import ViewEvent from "./components/ViewEvent";
+
 function App() {
 	return (
 		<>
@@ -80,6 +90,26 @@ function App() {
 						path="/viewGroup"
 						element={<ViewGroup />}
 					/>
+					<Route
+						path="/groupActivity"
+						element={<GroupActivity />}
+					/>
+					<Route
+						path="/createActivity"
+						element={<CreateActivity />}
+					/>
+          <Route
+						path="/events"
+						element={<Events />}
+          />
+					<Route
+						path="/createEvent"
+						element={<CreateEvent />}
+					/>
+					<Route
+						path="/viewEvent"
+						element={<ViewEvent />}
+					/>
 					{/* If any route mismatches the upper 
 		route endpoints then, redirect triggers 
 		and redirects app to home component with to="/" */}
@@ -88,6 +118,7 @@ function App() {
 						path="*"
 						element={<Navigate to="/" />}
 					/>
+
 				</Routes>
 			</Router>
 		</>
