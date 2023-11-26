@@ -28,6 +28,10 @@ import CreateGroup from "./components/CreateGroup";
 
 import ViewGroup from "./components/ViewGroup";
 
+import GroupActivity from "./components/GroupActivity";
+
+import CreateActivity from "./components/CreateActivity";
+
 import Events from "./components/Events";
 
 import CreateEvent from "./components/CreateEvent";
@@ -87,9 +91,17 @@ function App() {
 						element={<ViewGroup />}
 					/>
 					<Route
+						path="/groupActivity"
+						element={<GroupActivity />}
+					/>
+					<Route
+						path="/createActivity"
+						element={<CreateActivity />}
+					/>
+          <Route
 						path="/events"
 						element={<Events />}
-					/>
+          />
 					<Route
 						path="/createEvent"
 						element={<CreateEvent />}
