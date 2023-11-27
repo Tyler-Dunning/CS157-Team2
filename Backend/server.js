@@ -13,7 +13,7 @@ const db = mysql.createPool({
     host: "localhost",
     user: "root",
     password: "",
-    database: "pickup_finder",
+    database: "pickupfinder",
     port: 3306,
     options: {
         trustedConnection: true

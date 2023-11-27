@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios'; // Import Axios for making HTTP requests
 import { useNavigate } from 'react-router-dom';
+import './style/Login.css';
+
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -8,6 +10,7 @@ function Login() {
   const [errMessage, setError] = useState('');
 
   const navigate = useNavigate();
+  
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -53,23 +56,38 @@ function Login() {
 
   return (
     <div>
-      <input
+      <div className="topnav">
+      <a><img
+        src="./logo.jpg" 
+        alt="Logo"
+        //onClick={() => navigate('/home', {state: {username: username}})} // Navigate to the main page on logo click
+        className="logo"
+      /></a>
+      
+    </div>
+    <div className="pageContainer">
+      <div className="loginContainer">
+      <h2>Login / Sign up</h2>
+      <input className="inputField"
         type="text"
         placeholder="Enter username"
         value={username}
         onChange={handleUsernameChange}
       />
-        <input
+      <input className="inputField"
         type="text"
         placeholder="Enter password"
         value={inputPass}
         onChange={handleInput}
       />
-      <button onClick={checkPass}>Login</button>
+      <button className="buttons" onClick={checkPass}>Login</button>
       <p class = "error">{errMessage}</p>
       
+      <button className="buttons" onClick={goToCreate}>Create Account</button>
+      </div>
+    </div>
+    
       
-      <button onClick={goToCreate}>Create Account</button>
     </div>
   );
 }

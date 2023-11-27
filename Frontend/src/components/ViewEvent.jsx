@@ -17,6 +17,22 @@ function ViewGroup() {
     const returnToEvents = () => {
         navigate('/events', {state: {username: username}});
     }
+    const openCourts = () => {
+      
+        navigate("/courts", { state: { username: username} });
+      }
+  
+      const openGroups = () => {
+        
+        navigate("/groups", { state: { username: username} });
+      }
+  
+      const openEvents = () => {
+        navigate("/events",  { state: { username: username} });
+      }
+      const logout = () => {
+        navigate("/login");
+      }
 
     const createTeam = async () => {
         const response = await axios.post('http://localhost:8081/createTeam', {"user": username, "eventID": event.event_id});
@@ -64,6 +80,27 @@ function ViewGroup() {
 
   return (
     <div>
+        <div className="topnav">
+            <a><img
+                src="./logo.jpg" 
+                alt="Logo"
+                onClick={() => navigate('/home', {state: {username: username}})} 
+                className="logo"
+            /></a>
+            <a className="menu-button" onClick={openCourts}>Join a Court</a>
+            <a className="menu-button" onClick={openGroups}>Groups</a>
+            <a className="menu-button" onClick={openEvents}>Events</a>
+            <a className="logout" onClick={logout}>Logout</a>
+        </div>
+        <div className="backArrowBar">
+            <a className="backArrow" onClick={() => window.history.back()}>
+            <img
+                src="./back-arrow.png" 
+                alt="Back"
+                className="backArrow"
+            />
+            </a>
+        </div>
         <h2>{event.event_name}</h2>
         <h3>{event.event_desc}</h3>
         <h3>Max Teams: {event.max_teams}</h3>
@@ -77,12 +114,12 @@ function ViewGroup() {
                 <ul>
                     {team.members.map(member => <li key={member}>{member}</li>)}
                 </ul>
-                {!isUserCaptain && !isUserInTeam && team.members.length < event.team_size && <button onClick={() => joinTeam(team.team_id)}>Join Team</button>}
+                {!isUserCaptain && !isUserInTeam && team.members.length < event.team_size && <button className = "buttons" onClick={() => joinTeam(team.team_id)}>Join Team</button>}
             </div>
         ))}
 
-        {numTeams < event.max_teams && !isUserCaptain && !isUserInTeam && <button onClick={createTeam}>Create Team</button>}
-        <button onClick = {returnToEvents}>Return to Events</button>
+        {numTeams < event.max_teams && !isUserCaptain && !isUserInTeam && <button className = "buttons" onClick={createTeam}>Create Team</button>}
+        {/* <button onClick = {returnToEvents}>Return to Events</button> */}
     </div>
   )
 }

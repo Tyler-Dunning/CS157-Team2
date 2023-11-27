@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios for making HTTP requests
 import './style/Home.css';
-
+import './style/Table.css';
 
 function Home() {
     
@@ -32,6 +32,9 @@ function Home() {
 
     const openEvents = () => {
       navigate("/events",  { state: { username: username} });
+    }
+    const logout = () => {
+      navigate("/login");
     }
 
     const getFriends = async () =>
@@ -70,23 +73,33 @@ function Home() {
 
   return (
     
-    <div> 
-        <h2 className = "header">Welcome {username}</h2><br></br>
-        
-        <button className = "mainButtons" onClick={openCourts}>Join a Court</button><br></br>
-        <button className = "mainButtons" onClick = {openGroups}>Groups</button><br></br>
-        <button className = "mainButtons" onClick={openEvents}>Events</button><br></br>
-        
-
-      <ul className = "friends">
-        {friends.map((item, index) => (
-          <li key={index}>
-            {item}
-            <button className = "friendButtons" onClick={() => messageFriend(index)}>Message</button>
-          </li>
-        ))}        
-      </ul>
+    <div>
+    <div className="topnav">
+      <a><img
+        src="./logo.jpg" 
+        alt="Logo"
+        onClick={() => navigate('/home', {state: {username: username}})} 
+        className="logo"
+      /></a>
+      <a className="menu-button" onClick={openCourts}>Join a Court</a>
+      <a className="menu-button" onClick={openGroups}>Groups</a>
+      <a className="menu-button" onClick={openEvents}>Events</a>
+      <a className="logout" onClick={logout}>Logout</a>
     </div>
+    <h2 className="header">Welcome {username}</h2>
+    
+    <ul className="friends">
+      <h4>Friend List</h4>
+      {friends.map((item, index) => (
+        <li key={index}>
+          {item}
+          <button className="buttons" onClick={() => messageFriend(index)}>
+            Message
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
 
     
   )

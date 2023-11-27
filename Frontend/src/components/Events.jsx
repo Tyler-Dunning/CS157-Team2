@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios for making HTTP requests
+import './style/Table.css';
 
 function Groups() {
     const {state} = useLocation();
@@ -31,26 +32,68 @@ function Groups() {
     const goToEvent = (eventObj) => {
         navigate('/viewEvent', {state: {username: username, event: eventObj}});
     }
+    const openCourts = () => {
+      
+      navigate("/courts", { state: { username: username} });
+    }
+
+    const openGroups = () => {
+      
+      navigate("/groups", { state: { username: username} });
+    }
+
+    const openEvents = () => {
+      navigate("/events",  { state: { username: username} });
+    }
+    const logout = () => {
+      navigate("/login");
+    }
 
     useEffect(() => {getEvents()}, []);
 
   return (
     <div>
-        <h1>Events</h1>
-        <ul className='eventList'>
-        {events.map((event, index) => (
-          <li key={index}>
-            <div>{event.event_name}</div>
-            <div>{event.event_desc} </div>
-            <div>Team Size: {event.team_size} </div>
-            <div>Max Teams: {event.max_teams}</div>
-            <button onClick = {() => {goToEvent(event)}}>View This Event</button>
-            </li>
-        ))}        
-        <br></br>
-        <button onClick ={createEvent}>Create Event</button>
-        <button onClick = {returnToHome}>Return Home</button>
-      </ul>
+      <div className="topnav">
+      <a><img
+        src="./logo.jpg" 
+        alt="Logo"
+        onClick={() => navigate('/home', {state: {username: username}})}
+        className="logo"
+      /></a>
+      <a className="menu-button" onClick={openCourts}>Join a Court</a>
+      <a className="menu-button" onClick={openGroups}>Groups</a>
+      <a className="menu-button" onClick={openEvents}>Events</a>
+      <a className="logout" onClick={logout}>Logout</a>
+      </div>
+      <div className="tableContainer">
+        <h2>Events</h2>
+        <table className='table'>
+          <thead>
+            <tr>
+              <th>Event Name</th>
+              <th>Event Description</th>
+              <th>Team Size</th>
+              <th>Max Teams</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {events.map((event, index) => (
+              <tr key={index}>
+                <td>{event.event_name}</td>
+                <td>{event.event_desc}</td>
+                <td>{event.team_size}</td>
+                <td>{event.max_teams}</td>
+                <td>
+                  <button className = "buttons" onClick={() => goToEvent(event)}>View This Event</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <br />
+        <button className = "buttons" onClick={createEvent}>Create Event</button>
+      </div>
     </div>
   )
 }

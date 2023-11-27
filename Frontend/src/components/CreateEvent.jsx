@@ -22,6 +22,22 @@ function CreateGroup() {
     const returnToEvents = () => {
         navigate('/events', {state: {username: username}});
     }
+    const openCourts = () => {
+      
+      navigate("/courts", { state: { username: username} });
+    }
+
+    const openGroups = () => {
+      
+      navigate("/groups", { state: { username: username} });
+    }
+
+    const openEvents = () => {
+      navigate("/events",  { state: { username: username} });
+    }
+    const logout = () => {
+      navigate("/login");
+    }
 
     const submitEvent = async () => {
         await axios.post('http://localhost:8081/createEvent', {"name": nameField, "desc": descField, "court": courtField, 
@@ -33,15 +49,37 @@ function CreateGroup() {
 
   return (
     <div>
-        <h1>Create a Group</h1>
+      <div className="topnav">
+        <a><img
+          src="./logo.jpg" 
+          alt="Logo"
+          onClick={() => navigate('/home', {state: {username: username}})} 
+          className="logo"
+        /></a>
+        <a className="menu-button" onClick={openCourts}>Join a Court</a>
+        <a className="menu-button" onClick={openGroups}>Groups</a>
+        <a className="menu-button" onClick={openEvents}>Events</a>
+        <a className="logout" onClick={logout}>Logout</a>
+      </div>
+      <div className="backArrowBar">
+        <a className="backArrow" onClick={() => window.history.back()}>
+          <img
+            src="./back-arrow.png"
+            alt="Back"
+            className="backArrow"
+          />
+        </a>
+      </div>
+      <h1>Create an Event</h1>
 
-        <h3>Event Name</h3>
-        <input
-        type="text"
-        placeholder="Enter Group Name"
-        value={nameField}
-        onChange={e => setNameField(e.target.value)}
+      <h3>Event Name</h3>
+      <input
+      type="text"
+      placeholder="Enter Group Name"
+      value={nameField}
+      onChange={e => setNameField(e.target.value)}
       />
+
       <h3>Description</h3>
       <input
         type="text"
@@ -78,8 +116,10 @@ function CreateGroup() {
         onChange={e => setTeamSizeField(e.target.value)}
     />
       <br></br>
-      <button onClick ={submitEvent}>Create New Event</button><br></br>
-      <button onClick={returnToEvents}>Return To Events</button>
+      <div className="buttonMargin">
+        <button className="buttons" onClick ={submitEvent}>Create New Event</button><br></br>
+      </div>
+      {/* <button onClick={returnToEvents}>Return To Events</button> */}
       <p className = 'error'> {errMessage}</p>
     </div>
   )

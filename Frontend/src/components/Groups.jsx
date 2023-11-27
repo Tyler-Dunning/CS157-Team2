@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios for making HTTP requests
+import './style/Table.css';
+
 
 function Groups() {
     const {state} = useLocation();
@@ -16,6 +18,22 @@ function Groups() {
 
     const returnToHome = () => {
         navigate('/home', {state: {username: username}});
+    }
+    const openCourts = () => {
+      
+      navigate("/courts", { state: { username: username} });
+    }
+
+    const openGroups = () => {
+      
+      navigate("/groups", { state: { username: username} });
+    }
+
+    const openEvents = () => {
+      navigate("/events",  { state: { username: username} });
+    }
+    const logout = () => {
+      navigate("/login");
     }
 
     const getGroups = async () => {
@@ -42,18 +60,43 @@ function Groups() {
 
   return (
     <div>
-        <h1>Groups</h1>
-        <button onClick ={createGroup}>Create Group</button>
-        <ul className='groupList'>
-        {groups.map((item, index) => (
-          <li key={index}>
-            {item[0]} : {item[1]}
-            <button onClick = {() => {goToGroup(item[0], item[1])}}>View This Group</button>
-            </li>
-        ))}        
-        <br></br>
-        <button onClick = {returnToHome}>Return Home</button>
-      </ul>
+      <div className="topnav">
+      <a><img
+        src="./logo.jpg"
+        alt="Logo"
+        onClick={() => navigate('/home', {state: {username: username}})} 
+        className="logo"
+      /></a>
+      <a className="menu-button" onClick={openCourts}>Join a Court</a>
+      <a className="menu-button" onClick={openGroups}>Groups</a>
+      <a className="menu-button" onClick={openEvents}>Events</a>
+      <a className="logout" onClick={logout}>Logout</a>
+    </div>
+        <h2>Groups</h2>
+        <div className="tableContainer">
+        <table className='table'>
+          <thead>
+            <tr>
+              <th>Group ID</th>
+              <th>Group Description</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {groups.map((item, index) => (
+              <tr key={index}>
+                <td>{item[0]}</td>
+                <td>{item[1]}</td>
+                <td>
+                  <button className = "buttons" onClick={() => goToGroup(item[0], item[1])}>View This Group</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <br />
+        <button className = "buttons" onClick ={createGroup}>Create Group</button>
+      </div>
     </div>
   )
 }
