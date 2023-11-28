@@ -88,9 +88,11 @@ function ViewGroup() {
           }
     };
 
-    const leaveEvent = async () => {
-        await axios.delete(`http://localhost:8081/removeUserFromGroup/${username}/${groupID}`);
-        await getUsersInGroup();
+    const leaveTeam = async () => {
+        console.log("started remove");
+        await axios.delete(`http://localhost:8081/leaveTeam/${username}/${event.event_id}`);
+        console.log("Deleted");
+        await getTeamsInEvent();
     }
 
     useEffect(() => {getTeamsInEvent(), getCourtName(), changeDate()}, []);
@@ -137,6 +139,8 @@ function ViewGroup() {
             </div>
         ))}
 
+        {isUserInTeam && <button className = "buttons" onClick={() => leaveTeam()}>Leave Team</button>}
+                
         {numTeams < event.max_teams && !isUserCaptain && !isUserInTeam && 
               <input
               type="text"
