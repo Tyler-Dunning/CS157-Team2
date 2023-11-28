@@ -19,7 +19,23 @@ function ViewGroup() {
       navigate('/groups', {state: {username: username}});
     }
     const goToGroupActivity = () => {
-      navigate('/groupActivity', {state: {username: username, groupID: groupID}});
+      navigate('/groupActivity', {state: {username: username, groupID: groupID, groupDesc: groupDesc}});
+    }
+    const openCourts = () => {
+      
+      navigate("/courts", { state: { username: username} });
+    }
+
+    const openGroups = () => {
+      
+      navigate("/groups", { state: { username: username} });
+    }
+
+    const openEvents = () => {
+      navigate("/events",  { state: { username: username} });
+    }
+    const logout = () => {
+      navigate("/login");
     }
 
     const getUsersInGroup = async () => {
@@ -116,16 +132,38 @@ function ViewGroup() {
 
   return (
     <div>
+      <div className="topnav">
+        <a><img
+          src="./logo.jpg"
+          alt="Logo"
+          onClick={() => navigate('/home', {state: {username: username}})} 
+          className="logo"
+        /></a>
+        <a className="menu-button" onClick={openCourts}>Join a Court</a>
+        <a className="menu-button" onClick={openGroups}>Groups</a>
+        <a className="menu-button" onClick={openEvents}>Events</a>
+        <a className="logout" onClick={logout}>Logout</a>
+      </div>
+      <div className="backArrowBar">
+        <a className="backArrow" onClick={() => window.history.back()}>
+          <img
+            src="./back-arrow.png" 
+            alt="Back"
+            className="backArrow"
+          />
+        </a>
+      </div>
+
         <h2>{groupID}</h2>
-        {curUserInGroup && <button onClick = {leaveGroup}>Leave This Group</button>}
-        {!curUserInGroup && <button onClick = {joinGroup}>Join This Group</button>}
+        {curUserInGroup && <button className="leaveButtons" onClick = {leaveGroup}>Leave This Group</button>}
+        {!curUserInGroup && <button className="buttons" onClick = {joinGroup}>Join This Group</button>}
         <h3>{numUsers} Current Users in Group</h3>
 
         {curUserInGroup && 
         <ul className='friendList'>
         {usersInGroup.map((item, index) => (
           <li key={index}>
-            {item} {(item != username && friends.indexOf(item) == -1) && <button onClick = {() => {addFriend(item)}}>Add Friend</button>}<br></br>
+            {item} {(item != username && friends.indexOf(item) == -1) && <button className="buttons" onClick = {() => {addFriend(item)}}>Add Friend</button>}<br></br>
 
             </li>
         ))}        
@@ -138,25 +176,23 @@ function ViewGroup() {
             {item[0]} : {item[1]} <br></br>
             {item[2]}
             </li>
-        ))}        
+        ))}      
+        <div className = "messageEnter">  
+          <input
+          type="text"
+          placeholder="Enter message"
+          value={messageContent}
+          onChange={e => setMessage(e.target.value)}
+          />
+          <button className="buttons" onClick = {sendMessage}>
+            Send
+          </button>
+        </div>
       </ul>}
 
-      {curUserInGroup &&       
-      <input
-        type="text"
-        placeholder="Enter message"
-        value={messageContent}
-        onChange={e => setMessage(e.target.value)}
-      />
-        }
-      {curUserInGroup && 
-      <button onClick = {sendMessage}>
-            Send
-        </button>
-        }
         <br></br>
-        <button onClick = {goToGroupActivity}>Browse Group Activities</button>
-        <button onClick = {returnToGroups}>Return to Groups</button>
+        {curUserInGroup && <button className="buttons" onClick = {goToGroupActivity}>Browse Group Activities</button>}
+        {/* <button onClick = {returnToGroups}>Return to Groups</button> */}
     </div>
   )
 }

@@ -3,8 +3,8 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Monaco', monospace; /* Change to the desired font */
-    background-color: #028C6A; /* Change the background color */
+    font-family: 'Monami', monospace; /* Change to the desired font */
+    background-color: white; /* Change the background color */
     text-align: center;
   }
   
@@ -18,36 +18,74 @@ body {
     font-size: 48px; /* Change the font size */
     margin-bottom: 20px;
     text-align: center;
-    color: white;
+    color: #028C6A;
+  }
+  .logo {
+    cursor: pointer;
   }
   
   .friendsList {
     width: 40%; /* Set the width for the friends list */
     text-align: right;
+    margin-right: 30px;
   }
   
   .friends{
     text-align: right;
+    margin-right: 30px;
+    padding: 20px;
   }
-    
-.mainButtons{
-    align-items: center;
-    font-size: 24px;
-    background-color: #FE7773; /* Set background color */
+  
+  .topnav {
+    background-color: white;
+    overflow:hidden;
+    border-bottom: 1px solid rgb(185, 184, 184);
+    display: flex;
+  }
+
+  /* Style the links inside the navigation bar */
+  .topnav a {
+    float: left;
+    color: black;
+    text-align: center;
+    padding: 14px 70px;
+    text-decoration: none;
+    font-size: 17px;
+    cursor: pointer;
+    border-radius: 25px;
+    margin-top: auto;
+  }
+
+  /* Change the color of links on hover */
+  .menu-button:hover {
+    background-color: #b4b4b4;
+  }
+
+  .logout {
+    margin-left: auto;
+  }
+  .logout:hover {
+    background-color: #ff8484;
+  }
+
+  .buttons {
+    margin-left: 10px; /* Add margin to separate button from list item */
+    padding: 8px 16px; /* Add padding to the button */
+    background-color: #028C6A; /* Set background color */
     color: #fff; /* Set text color */
     border: none; /* Remove border */
     border-radius: 5px; /* Add border-radius */
     cursor: pointer; /* Add pointer cursor on hover */
-    margin-bottom: 32px; /* Add margin bottom to separate list items */
-    padding: 24px;
-    padding-left: 48px;
-    padding-right: 48px;
-}
+    list-style: none;
+  }
+  .buttons:hover {
+    background-color: #015943; /* Set background color */
+  }
 
-.friendButtons {
+  .leaveButtons {
     margin-left: 10px; /* Add margin to separate button from list item */
     padding: 8px 16px; /* Add padding to the button */
-    background-color: #FE7773; /* Set background color */
+    background-color: #d60505; /* Set background color */
     color: #fff; /* Set text color */
     border: none; /* Remove border */
     border-radius: 5px; /* Add border-radius */
@@ -55,4 +93,21 @@ body {
     list-style: none;
   }
 
+  .leaveButtons:hover {
+    background-color: #6e0101; /* Set background color */
+  }
+
+  .backArrowBar{
+    display: flex;
+    padding: 10px;
+    align-items: left;
+  }
+  .backArrow {
+    width: 20px; /* Adjust the width as needed */
+    height: 20px; /* Adjust the height as needed */
+    cursor: pointer;
+  }
+ .buttonMargin{
+  margin-top: 1%;
+ }
   

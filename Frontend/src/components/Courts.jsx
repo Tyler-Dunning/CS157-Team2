@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios for making HTTP requests
 
+
 function Courts() {
 
     const {state} = useLocation();
@@ -13,7 +14,22 @@ function Courts() {
     const returnToHome = () => {
         navigate('/home', {state: {username: username}});
     }
+    const openCourts = () => {
+      
+      navigate("/courts", { state: { username: username} });
+    }
 
+    const openGroups = () => {
+      
+      navigate("/groups", { state: { username: username} });
+    }
+
+    const openEvents = () => {
+      navigate("/events",  { state: { username: username} });
+    }
+    const logout = () => {
+      navigate("/login");
+    }
     const getCourts = async () => {
         try{ 
             var res = [];
@@ -38,17 +54,49 @@ function Courts() {
 
   return (
     <div>
+      <div className="topnav">
+      <a><img
+        src="./logo.jpg" 
+        alt="Logo"
+        onClick={() => navigate('/home', {state: {username: username}})} 
+        className="logo"
+      /></a>
+      <a className="menu-button" onClick={openCourts}>Join a Court</a>
+      <a className="menu-button" onClick={openGroups}>Groups</a>
+      <a className="menu-button" onClick={openEvents}>Events</a>
+      <a className="logout" onClick={logout}>Logout</a>
+      </div>
         <h2>Courts</h2>
-        <ul className='courtList'>
-        {courts.map((item, index) => (
-          <li key={index}>
-            {item[1]} : {item[2]} : {item[3]}: {item[4]}: {item[5]}<button onClick = {() => {viewCourt(item[0], item[1])}}>Join this Court</button><br></br>
-            
-            </li>
-        ))}        
-      </ul>
+        <div className="tableContainer">
+          <table className='table'>
+            <thead>
+              <tr>
+                <th>Court Name</th>
+                <th>Location</th>
+                <th>Condition</th>
+                <th>Number of Hoops</th>
+                <th>Operation Time</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {courts.map((item, index) => (
+                <tr key={index}>
+                  <td>{item[1]}</td>
+                  <td>{item[2]}</td>
+                  <td>{item[3]}</td>
+                  <td>{item[4]}</td>
+                  <td>{item[5]}</td>
+                  <td>
+                    <button className = "buttons" onClick={() => viewCourt(item[0], item[1])}>Join this Court</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
       <br></br>
-      <button onClick = {returnToHome}>Return Home</button>
     </div>
   )
 }

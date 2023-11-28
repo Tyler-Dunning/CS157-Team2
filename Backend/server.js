@@ -13,7 +13,7 @@ const db = mysql.createPool({
     host: "localhost",
     user: "root",
     password: "",
-    database: "pickup_finder",
+    database: "pickupfinder",
     port: 3306,
     options: {
         trustedConnection: true
@@ -49,6 +49,14 @@ app.get("/events", (req, res) => {
     })
 })
 
+app.get("/courtName/:id", (req,res) => {
+    const id = req.params.id;
+    db.query("SELECT court_name FROM courts WHERE court_id = ?", id, (err,data) => {
+        if(err) console.log(err);
+        return res.json(data);
+    })
+})
+
 app.get("/groupActivity/:groupID", (req, res) => {
     const groupID = req.params.groupID;    
     db.query("SELECT activity_name, activity_desc, location FROM groupactivities WHERE group_id = ?", groupID, (err, data) => {
@@ -75,7 +83,7 @@ app.get("/usersInGroup/:group", (req, res) => {
 
 app.get("/teamsInEvent/:eventID" , (req, res) => {
     const eventID = req.params.eventID;
-    db.query("SELECT t.event_id,t.team_id,t.captain_name,u.user_id FROM pickup_finder.teams t JOIN pickup_finder.userOnTeam u ON t.team_id = u.team_id WHERE t.event_id = ? ORDER BY t.team_id, u.user_id;", eventID, (err, data) => {
+    db.query("SELECT t.event_id,t.team_id,t.captain_name,u.user_id FROM teams t NATURAL JOIN userOnTeam u WHERE t.team_id = u.team_id AND t.event_id = ? ORDER BY t.team_id, u.user_id;", eventID, (err, data) => {
         if(err) console.log(err);
         const teams = {};
 
@@ -97,7 +105,7 @@ app.get("/teamsInEvent/:eventID" , (req, res) => {
 
 app.get('/friends/:id', (req,res) => {
     const id = req.params.id;
-    db.query("SELECT user2, friendship_id FROM friends WHERE user1 = ?", id, (err,data) => {
+    db.query("SELECT * FROM friends WHERE user1 = ?", id, (err,data) => {
         if(err) console.log(err);
         res.send(data);
     })
@@ -105,7 +113,7 @@ app.get('/friends/:id', (req,res) => {
 
 app.get('/friends2/:id', (req,res) => {
     const id = req.params.id;
-    db.query("SELECT user1, friendship_id FROM friends WHERE user2 = ?", id, (err,data) => {
+    db.query("SELECT * FROM friends WHERE user2 = ?", id, (err,data) => {
         if(err) console.log(err);
         res.send(data);
     })
@@ -148,9 +156,20 @@ app.get('/getmessage/group/:groupID', (req,res) => {
     })
 });
 
-app.get('/teamMembers/:teamID', (req, res) => {
+app.get('/teamMembers/:teamID/:eventID', (req, res) => {
     const teamID = req.body.teamID;
-    db.query("SELECT user_id FROM userOnTeam WHERE team_id", teamID, (err, data) => {
+    const eventID = req.body.eventID;
+    db.query("SELECT user_id FROM userOnTeam WHERE team_id = ? AND event_id = ?", [teamID, eventID], (err, data) => {
+        if(err) console.log(err);
+        res.send(data);
+    })
+})
+
+app.put('/acceptFriend/:friendID/:userID', (req,res) => {
+    const friendID = req.params.friendID;
+    const uID = req.params.userID;
+
+    db.query("UPDATE friends SET pending = 1 WHERE user1 = ? AND user2 = ?", [friendID, uID], (err,data) => {
         if(err) console.log(err);
         res.send(data);
     })
@@ -206,8 +225,9 @@ app.post('/createGroup', (req, res) => {
 app.post('/createTeam', (req, res) => {
     const user = req.body.user;
     const event = req.body.eventID;
+    const name = req.body.name;
     // Insert into the 'teams' table
-    db.query("INSERT INTO teams(event_id, captain_name) VALUES (?, ?)", [event, user], (err, data) => {
+    db.query("INSERT INTO teams(team_id, event_id, captain_name) VALUES (?, ?, ?)", [name, event, user], (err, data) => {
         if (err) {
             console.log(err);
             return res.status(500).send(err);
@@ -229,7 +249,8 @@ app.post('/createTeam', (req, res) => {
 app.post('/joinTeam', (req, res) => {
     const team = req.body.team;
     const user = req.body.user;
-    db.query("INSERT INTO userOnTeam(user_id, team_id) VALUES (?, ?)", [user, team], (err,data) => {
+    const event = req.body.event;
+    db.query("INSERT INTO userOnTeam(user_id, team_id, event_id) VALUES (?, ?, ?)", [user, team, event], (err,data) => {
         if(err) console.log(err);
         res.send(data);
     })
@@ -238,7 +259,7 @@ app.post('/joinTeam', (req, res) => {
 app.post('/createEvent', (req, res) => {
     const name = req.body.name;
     const court = req.body.court;
-    const date = new Date();
+    const date = req.body.date;
     const maxTeams = req.body.maxTeams;
     const teamSize = req.body.teamSize;
     const desc = req.body.desc;
@@ -247,6 +268,7 @@ app.post('/createEvent', (req, res) => {
     [name, court, date, maxTeams, teamSize, desc], (err, data) => {
         if(err) console.log(err);
         res.send(data);
+        console.log(data);
     })
 })
 

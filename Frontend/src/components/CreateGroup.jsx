@@ -14,6 +14,23 @@ function CreateGroup() {
 
     const navigate = useNavigate();
 
+    const openCourts = () => {
+      
+      navigate("/courts", { state: { username: username} });
+    }
+
+    const openGroups = () => {
+      
+      navigate("/groups", { state: { username: username} });
+    }
+
+    const openEvents = () => {
+      navigate("/events",  { state: { username: username} });
+    }
+    const logout = () => {
+      navigate("/login");
+    }
+
 
     const submitGroup = async () => {
 
@@ -33,6 +50,29 @@ function CreateGroup() {
 
   return (
     <div>
+      <div className="topnav">
+        <a><img
+          src="./logo.jpg" 
+          alt="Logo"
+          onClick={() => navigate('/home', {state: {username: username}})} 
+          className="logo"
+        /></a>
+        <a className="menu-button" onClick={openCourts}>Join a Court</a>
+        <a className="menu-button" onClick={openGroups}>Groups</a>
+        <a className="menu-button" onClick={openEvents}>Events</a>
+        <a className="logout" onClick={logout}>Logout</a>
+      </div>
+
+      <div className="backArrowBar">
+        <a className="backArrow" onClick={() => window.history.back()}>
+          <img
+            src="./back-arrow.png" 
+            alt="Back"
+            className="backArrow"
+          />
+        </a>
+      </div>
+
         <h1>Create a Group</h1>
 
         <h3>Enter Group Name</h3>
@@ -50,7 +90,10 @@ function CreateGroup() {
         onChange={e => setDescField(e.target.value)}
       />
       <br></br>
-      <button onClick ={submitGroup}>Create New Group</button><br></br>
+      <div className="buttonMargin">
+        <button className="buttons" onClick ={submitGroup}>Create New Group</button>
+      </div>
+      <br></br>
       <p className = 'error'> {errMessage}</p>
     </div>
   )

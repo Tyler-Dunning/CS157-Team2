@@ -45,26 +45,51 @@ function CreateAccount() {
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Enter username"
-        value={username}
-        onChange={handleUsernameChange}
-      />
+      <div className="topnav">
+        <a><img
+          src="./logo.jpg"
+          alt="Logo"
+          //onClick={() => navigate('/home', {state: {username: username}})} // Navigate to the main page on logo click
+          className="logo"
+        /></a>
+      </div>
+      <div className="backArrowBar">
+        <a className="backArrow" onClick={() => window.history.back()}>
+          <img
+            src="./back-arrow.png" 
+            alt="Back"
+            className="backArrow"
+          />
+        </a>
+      </div>
+      <div className="pageContainer">
+        <div className="loginContainer">
+          <h3>Create Account</h3>
         <input
-        type="password"
-        placeholder="Enter password"
-        value={password}
-        onChange={handlePassword}
-      />
+          className="inputField"
+          type="text"
+          placeholder="Enter username"
+          value={username}
+          onChange={handleUsernameChange}
+        />
         <input
-        type="password"
-        placeholder="Verify password"
-        value={confirm}
-        onChange={handleConfirm}
-      />
-      <button onClick = {uploadUser}>Create Account</button>
-      <p class = "error">{errMessage}</p>
+          className="inputField"
+          type="password"
+          placeholder="Enter password"
+          value={password}
+          onChange={handlePassword}
+        />
+        <input
+          className="inputField"
+          type="password"
+          placeholder="Verify password"
+          value={confirm}
+          onChange={handleConfirm}
+        />
+        <button className="buttons" onClick = {uploadUser}>Create Account</button>
+        <p class = "error">{errMessage}</p>
+      </div>
+      </div>
     </div>
   );
 }

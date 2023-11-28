@@ -18,6 +18,22 @@ function CourtView() {
     const returnToCourts = () => {
         navigate('/courts', {state: {username: username}});
     }
+    const openCourts = () => {
+      
+      navigate("/courts", { state: { username: username} });
+    }
+
+    const openGroups = () => {
+      
+      navigate("/groups", { state: { username: username} });
+    }
+
+    const openEvents = () => {
+      navigate("/events",  { state: { username: username} });
+    }
+    const logout = () => {
+      navigate("/login");
+    }
 
     const getUsersOnCourt = async () => {
         try{ 
@@ -116,39 +132,68 @@ function CourtView() {
 
   return (
     <div>
+      <div className="topnav">
+        <a><img
+          src="./logo.jpg" 
+          alt="Logo"
+          onClick={() => navigate('/home', {state: {username: username}})} 
+          className="logo"
+        /></a>
+        <a className="menu-button" onClick={openCourts}>Join a Court</a>
+        <a className="menu-button" onClick={openGroups}>Groups</a>
+        <a className="menu-button" onClick={openEvents}>Events</a>
+        <a className="logout" onClick={logout}>Logout</a>
+      </div>
+      <div className="backArrowBar">
+        <a className="backArrow" onClick={() => window.history.back()}>
+          <img
+            src="./back-arrow.png" 
+            alt="Back"
+            className="backArrow"
+          />
+        </a>
+      </div>
         <h2>{courtName}</h2>
-        {curUserOnCourt && <button onClick = {leaveCourt}>Leave This Court</button>}
-        {!curUserOnCourt && <button onClick = {joinCourt}>Join This Court</button>}
-        <h3>{numUsers} Current Players</h3>
-        <ul className='friendList'>
-        {usersOnCourt.map((item, index) => (
-          <li key={index}>
-            {item} {(item != username && friends.indexOf(item) == -1) && <button onClick = {() => {addFriend(item)}}>Add Friend</button>}<br></br>
+        {curUserOnCourt && <button className="leaveButtons" onClick = {leaveCourt}>Leave This Court</button>}
+        {!curUserOnCourt && <button className="buttons" onClick = {joinCourt}>Join This Court</button>}
+        <div>
+          <h3>{numUsers} Current Players</h3>
+          <ul className='friendList'>
+          {usersOnCourt.map((item, index) => (
+            <li key={index}>
+              {item} {(item != username && friends.indexOf(item) == -1) && <button className="buttons" onClick = {() => {addFriend(item)}}>Add Friend</button>}<br></br>
 
-            </li>
-        ))}        
-      </ul>
-
+              </li>
+          ))}        
+          </ul>
+        </div>
+        
+      
       <ul className='textbox'>
         {messages.map((item, index) => (
           <li key={index}>
             {item[0]} : {item[1]} <br></br>
             {item[2]}
             </li>
-        ))}        
-      </ul>
-
-      <input
+        ))}  
+        
+      <div className = "messageEnter">
+        <input
         type="text"
         placeholder="Enter message"
         value={messageContent}
         onChange={e => setMessage(e.target.value)}
-      />
-      <button onClick = {sendMessage}>
+        />
+        <button className="buttons" onClick = {sendMessage}>
             Send
         </button>
+      </div>
+            
+      </ul>
+
+    
         <br></br>
-        <button onClick = {returnToCourts}>Return to Courts</button>
+        {/* <button className="buttons" onClick = {returnToCourts}>Return to Courts</button> */}
     </div>
   )
 }

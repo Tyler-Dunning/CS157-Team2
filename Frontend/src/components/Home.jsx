@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios for making HTTP requests
 import './style/Home.css';
-
+import './style/Table.css';
 
 function Home() {
     
@@ -13,11 +13,16 @@ function Home() {
     const {username} = state;
 
     const[friends, setFriends] = useState([]);
-    const[friendIDs, setFriendIDs] = useState([]);
+    //const[friendIDs, setFriendIDs] = useState([]);
     
     const messageFriend = (e) => {
       
-      navigate("/friendMessages", { state: { username: username, friendID: friendIDs[e] } });
+      navigate("/friendMessages", { state: { username: username, friendID: e } });
+    }
+
+    const acceptRequest = async (e) => {
+      await axios.put(`http://localhost:8081/acceptFriend/${e}/${username}`);
+      getFriends();
     }
 
     const openCourts = () => {
@@ -33,13 +38,14 @@ function Home() {
     const openEvents = () => {
       navigate("/events",  { state: { username: username} });
     }
+    const logout = () => {
+      navigate("/login");
+    }
 
     const getFriends = async () =>
     {
-      console.log("opened");
       try{ 
         var res = [];
-        var IDs = [];
         const response = await axios.get(`http://localhost:8081/friends/${username}`);
         const userData = response.data;
         
@@ -48,45 +54,55 @@ function Home() {
         
         let i = 0;
         for(i; i < userData.length; i++) {
-          res[i] = (userData[i].user2);
-          IDs[i] = userData[i].friendship_id;
+          if(userData[i].pending != 0){
+            res.push([userData[i].user2, userData[i].friendship_id, userData[i].pending]);
+          }
         }
-        for(let c = 0; c < userData2.length; c++)
+        for(let c = i; c < userData2.length + i; c++)
         {
-          res[i + c] = (userData2[c].user1);
-          IDs[i + c] = userData2[c].friendship_id;
+          res.push([userData2[c - i].user1, userData2[c - i].friendship_id, userData2[c - i].pending]);
         }
         console.log(res);
-        console.log(IDs);
         setFriends(res);
-        setFriendIDs(IDs);
       }
       catch(error) {
         console.error('Error fetching password:', error);
       }
-    }
-
+    } 
     useEffect(() => {getFriends()}, []);
 
   return (
     
-    <div> 
-        <h2 className = "header">Welcome {username}</h2><br></br>
-        
-        <button className = "mainButtons" onClick={openCourts}>Join a Court</button><br></br>
-        <button className = "mainButtons" onClick = {openGroups}>Groups</button><br></br>
-        <button className = "mainButtons" onClick={openEvents}>Events</button><br></br>
-        
-
-      <ul className = "friends">
-        {friends.map((item, index) => (
-          <li key={index}>
-            {item}
-            <button className = "friendButtons" onClick={() => messageFriend(index)}>Message</button>
-          </li>
-        ))}        
-      </ul>
+    <div>
+    <div className="topnav">
+      <a><img
+        src="./logo.jpg" 
+        alt="Logo"
+        onClick={() => navigate('/home', {state: {username: username}})} 
+        className="logo"
+      /></a>
+      <a className="menu-button" onClick={openCourts}>Join a Court</a>
+      <a className="menu-button" onClick={openGroups}>Groups</a>
+      <a className="menu-button" onClick={openEvents}>Events</a>
+      <a className="logout" onClick={logout}>Logout</a>
     </div>
+    <h2 className="header">Welcome {username}</h2>
+    
+    <ul className="friends">
+      <h4>Friend List</h4>
+      {friends.map((item, index) => (
+        <li key={index}>
+          {item[0]}
+          {item[2] != 0 && <button className="buttons" onClick={() => messageFriend(item[1])}>
+            Message
+          </button> }
+          {item[2] == 0 && <button className="buttons" onClick={() => acceptRequest(item[0])}>
+            Accept Friend Request
+          </button> }
+        </li>
+      ))}
+    </ul>
+  </div>
 
     
   )

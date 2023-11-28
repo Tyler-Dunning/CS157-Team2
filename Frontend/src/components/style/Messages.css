@@ -18,4 +18,9 @@
   ul li {
     margin-bottom: 10px; /* Add margin between list items */
   }
+
+  .messageEnter {
+    padding: 10px;
+    border-top: 1px solid rgb(185, 184, 184);
+  }
   
