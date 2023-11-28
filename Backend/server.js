@@ -351,6 +351,15 @@ app.delete('/removeUserFromCourt/:user', (req, res) =>
     })
 });
 
+app.delete('/leaveTeam/:user/:event', (req,res) => {
+    const user = req.params.user;
+    const event = req.params.event;
+    db.query("DELETE FROM useronteam WHERE user_id = ? AND event_id = ?", [user, event], (err,data) => {
+        if(err) console.log(err);
+        res.send(data);
+    })
+})
+
 app.delete('/removeUserFromGroup/:user/:groupID', (req, res) => 
 {
     const user = req.params.user;
