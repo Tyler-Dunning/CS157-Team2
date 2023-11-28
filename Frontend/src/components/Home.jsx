@@ -13,11 +13,16 @@ function Home() {
     const {username} = state;
 
     const[friends, setFriends] = useState([]);
-    const[friendIDs, setFriendIDs] = useState([]);
+    //const[friendIDs, setFriendIDs] = useState([]);
     
     const messageFriend = (e) => {
       
-      navigate("/friendMessages", { state: { username: username, friendID: friendIDs[e] } });
+      navigate("/friendMessages", { state: { username: username, friendID: e } });
+    }
+
+    const acceptRequest = async (e) => {
+      await axios.put(`http://localhost:8081/acceptFriend/${e}/${username}`);
+      getFriends();
     }
 
     const openCourts = () => {
@@ -39,10 +44,8 @@ function Home() {
 
     const getFriends = async () =>
     {
-      console.log("opened");
       try{ 
         var res = [];
-        var IDs = [];
         const response = await axios.get(`http://localhost:8081/friends/${username}`);
         const userData = response.data;
         
@@ -51,24 +54,21 @@ function Home() {
         
         let i = 0;
         for(i; i < userData.length; i++) {
-          res[i] = (userData[i].user2);
-          IDs[i] = userData[i].friendship_id;
+          if(userData[i].pending != 0){
+            res.push([userData[i].user2, userData[i].friendship_id, userData[i].pending]);
+          }
         }
-        for(let c = 0; c < userData2.length; c++)
+        for(let c = i; c < userData2.length + i; c++)
         {
-          res[i + c] = (userData2[c].user1);
-          IDs[i + c] = userData2[c].friendship_id;
+          res.push([userData2[c - i].user1, userData2[c - i].friendship_id, userData2[c - i].pending]);
         }
         console.log(res);
-        console.log(IDs);
         setFriends(res);
-        setFriendIDs(IDs);
       }
       catch(error) {
         console.error('Error fetching password:', error);
       }
-    }
-
+    } 
     useEffect(() => {getFriends()}, []);
 
   return (
@@ -92,10 +92,13 @@ function Home() {
       <h4>Friend List</h4>
       {friends.map((item, index) => (
         <li key={index}>
-          {item}
-          <button className="buttons" onClick={() => messageFriend(index)}>
+          {item[0]}
+          {item[2] != 0 && <button className="buttons" onClick={() => messageFriend(item[1])}>
             Message
-          </button>
+          </button> }
+          {item[2] == 0 && <button className="buttons" onClick={() => acceptRequest(item[0])}>
+            Accept Friend Request
+          </button> }
         </li>
       ))}
     </ul>

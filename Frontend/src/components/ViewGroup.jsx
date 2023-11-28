@@ -19,7 +19,7 @@ function ViewGroup() {
       navigate('/groups', {state: {username: username}});
     }
     const goToGroupActivity = () => {
-      navigate('/groupActivity', {state: {username: username, groupID: groupID}});
+      navigate('/groupActivity', {state: {username: username, groupID: groupID, groupDesc: groupDesc}});
     }
     const openCourts = () => {
       
@@ -191,7 +191,7 @@ function ViewGroup() {
       </ul>}
 
         <br></br>
-        <button className="buttons" onClick = {goToGroupActivity}>Browse Group Activities</button>
+        {curUserInGroup && <button className="buttons" onClick = {goToGroupActivity}>Browse Group Activities</button>}
         {/* <button onClick = {returnToGroups}>Return to Groups</button> */}
     </div>
   )

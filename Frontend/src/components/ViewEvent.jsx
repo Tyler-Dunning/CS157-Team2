@@ -12,6 +12,9 @@ function ViewGroup() {
     const[teams, setTeams] = useState([]);
     const [isUserInTeam, setIsUserInTeam] = useState(false);
     const [isUserCaptain, setIsUserCaptain] = useState(false);
+    const[teamField, setTeamField] = useState('');
+    const[courtName, setCourtName] = useState('');
+    const[displayDate, setDisplayDate] = useState('');
 
 
     const returnToEvents = () => {
@@ -34,15 +37,36 @@ function ViewGroup() {
         navigate("/login");
       }
 
+    const getCourtName = async () => {
+      try{
+        const response = await axios.get(`http://localhost:8081/courtName/${event.court_id}`);
+        const userData =  response.data;
+
+        setCourtName(userData[0].court_name);
+      }
+      catch(error) {
+          console.error('Error fetching events:', error);
+      }
+    }
+
     const createTeam = async () => {
-        const response = await axios.post('http://localhost:8081/createTeam', {"user": username, "eventID": event.event_id});
+        const response = await axios.post('http://localhost:8081/createTeam', {"user": username, "name": teamField, "eventID": event.event_id});
         console.log(response.data)
         await joinTeam(response.data.team_id);
         await getTeamsInEvent();
     }
 
     const joinTeam = async (teamID) => {
-        await axios.post('http://localhost:8081/joinTeam', {"user": username, "team": teamID});
+        await axios.post('http://localhost:8081/joinTeam', {"user": username, "team": teamID, "event": event.event_id});
+        await getTeamsInEvent();
+    }
+
+    const changeDate = () => {
+      var x = event.event_date;
+      console.log(x);
+      let modified = x.replace('T', ' at ').replace('Z', '').replace(':00.000', '');
+      
+      setDisplayDate(modified);
     }
     
 
@@ -64,19 +88,12 @@ function ViewGroup() {
           }
     };
 
-    const joinEvent = async () => {
-        await axios.post('http://localhost:8081/joinGroup', {"user": username, "group": groupID});
-        await getUsersInGroup();
-        console.log("joined");
-        
-    }
-
     const leaveEvent = async () => {
         await axios.delete(`http://localhost:8081/removeUserFromGroup/${username}/${groupID}`);
         await getUsersInGroup();
     }
 
-    useEffect(() => {getTeamsInEvent()}, []);
+    useEffect(() => {getTeamsInEvent(), getCourtName(), changeDate()}, []);
 
   return (
     <div>
@@ -102,13 +119,15 @@ function ViewGroup() {
             </a>
         </div>
         <h2>{event.event_name}</h2>
-        <h3>{event.event_desc}</h3>
+        <h3>{courtName}</h3>
+        <h4>{displayDate}</h4>
+        <h4>{event.event_desc}</h4>
         <h3>Max Teams: {event.max_teams}</h3>
         <h3>Team Size: {event.team_size}</h3>
         <h3>{numTeams} Current Teams in Event</h3>
         {teams.map(team => (
             <div key={team.team_id}>
-                <h2>Team {team.team_id}</h2>
+                <h2>{team.team_id}</h2>
                 <p>Captain: {team.team_captain}</p>
                 Members:
                 <ul>
@@ -118,6 +137,14 @@ function ViewGroup() {
             </div>
         ))}
 
+        {numTeams < event.max_teams && !isUserCaptain && !isUserInTeam && 
+              <input
+              type="text"
+              placeholder="Enter Team Name"
+              value={teamField}
+              onChange={e => setTeamField(e.target.value)}
+            />
+        }
         {numTeams < event.max_teams && !isUserCaptain && !isUserInTeam && <button className = "buttons" onClick={createTeam}>Create Team</button>}
         {/* <button onClick = {returnToEvents}>Return to Events</button> */}
     </div>

@@ -75,7 +75,7 @@ function Login() {
         onChange={handleUsernameChange}
       />
       <input className="inputField"
-        type="text"
+        type="password"
         placeholder="Enter password"
         value={inputPass}
         onChange={handleInput}
